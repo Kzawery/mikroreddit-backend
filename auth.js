@@ -37,7 +37,7 @@ router.post("/register", async (req, res) => {
         });
     await pg
         .query(
-            `select * from reddit_user where username= '${req.body.username}'`
+            `select * from reddit_user where nickname= '${req.body.username}'`
         )
         .then((response) => {
             if (response.rows.length > 0){
@@ -52,9 +52,9 @@ router.post("/register", async (req, res) => {
         .then(() => {
         res.sendStatus(200);
     }).catch((err) => {
-            console.log(err);
-            res.sendStatus(500);
-        })
+        console.log(err);
+        res.sendStatus(500);
+    })
 });
 
 
