@@ -1,0 +1,36 @@
+{
+  "name": "mikroreddit-backend",
+  "version": "1.0.0",
+  "description": "Backend for mikroreddit",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "postgresql",
+    "rest",
+    "api"
+  ],
+  "author": "Kzawery",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-form-data": "^2.0.17",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.2",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.6.2",
+    "socket.io": "^4.1.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "passport-jwt": "^4.0.0"
+  }
+}
