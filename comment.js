@@ -26,7 +26,7 @@ router.get("/moderator/:id", async (req, res) => {
         )
         .then((resp) =>{
             let rows = resp.rows[0];
-            if(resp.rows.length > 0){
+            if(resp.rows.length > 0) {
                 res.send(rows);
             }
         }).catch((err) => {
@@ -54,12 +54,12 @@ router.delete("/:id", async (req, res) => {
         .query(
             `delete from comment where id = ${req.params.id} returning id;`
         )
-        .then((resp) =>{
+        .then((resp) => {
             res.send(resp.rows);
             const io = req.app.get("socketio");
             io.emit(`comment/del`, `${req.params.id}`);
             res.sendStatus(200);
-        } )
+        })
         .catch((err) => {
             console.log(err);
             res.sendStatus(500);

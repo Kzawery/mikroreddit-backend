@@ -110,18 +110,18 @@ router.put(`/edit/:subname`, async (req, res) => {
         .query(
             `select id from subreddit where name = '${req.params.subname}'`
         ).then((resp) => {
-        id = resp.rows[0].id;
-    }).catch(() => {
-        res.sendStatus(500);
-    });
+            id = resp.rows[0].id;
+        }).catch(() => {
+            res.sendStatus(500);
+        });
     await pg
         .query(
             `update subreddit set description = '${req.body.description}' where id = ${id};`
         ).then(()=> {
             res.sendStatus(200);
-    }).catch(()=>{
-        res.status(500);
-    });
+        }).catch(()=>{
+            res.status(500);
+        });
 });
 router.get(`/:subname`, async (req, res) => {
     await pg

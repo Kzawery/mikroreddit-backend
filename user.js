@@ -21,7 +21,7 @@ router.post("/changepassword/",  async(req, res) => {
     pg
         .query(
             `select * from reddit_user where id = ${req.user.id} and password='${req.body.currentpassword}';`
-        ).then((resp)=>{
+        ).then((resp)=> {
             if(resp.rows.length > 0) {
                 pg
                     .query(
@@ -57,7 +57,7 @@ router.get("/subreddit/moderator/:name", async (req, res) => {
         .query(
             `select * from subreddit_moderator inner join subreddit on subreddit.id = subreddit_moderator.subreddit_id where user_id=${req.user.id} and name = '${req.params.name}';`
         ).then((resp) => {
-            res.send(resp)
+            res.send(resp);
         }).catch((err) => {
             console.log(err);
         });

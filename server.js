@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(`/uploads`, express.static('./uploads'));
-app.use("", express.static("C:/Users/Robert/Desktop/vue projects/projekt/mikroreddit/dist"));
+app.use('', express.static('../mikroreddit/dist'));
 
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
@@ -30,12 +30,12 @@ const io = new Server(server, {
 
 app.set('socketio',io);
 
-app.use('/auth', authRouter)
-app.use('/search', passport.authenticate("jwt", { session: false }), searchRouter)
-app.use('/users', passport.authenticate("jwt", { session: false }), userRouter)
-app.use('/posts', passport.authenticate("jwt", { session: false }), postRouter)
-app.use('/comments', passport.authenticate("jwt", { session: false }), commentRouter)
-app.use('/subreddits', passport.authenticate("jwt", { session: false }), subredditRouter)
+app.use('/auth', authRouter);
+app.use('/search', passport.authenticate("jwt", { session: false }), searchRouter);
+app.use('/users', passport.authenticate("jwt", { session: false }), userRouter);
+app.use('/posts', passport.authenticate("jwt", { session: false }), postRouter);
+app.use('/comments', passport.authenticate("jwt", { session: false }), commentRouter);
+app.use('/subreddits', passport.authenticate("jwt", { session: false }), subredditRouter);
 
 
 
