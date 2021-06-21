@@ -15,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(`/uploads`, express.static('./uploads'));
+app.use("", express.static("C:/Users/Robert/Desktop/vue projects/projekt/mikroreddit/dist"));
 
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {

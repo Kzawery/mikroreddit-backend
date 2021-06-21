@@ -19,6 +19,22 @@ router.get("/:id", async (req, res) => {
         });
 });
 
+router.get("/moderator/:id", async (req, res) => {
+    await pg
+        .query(
+            `select post.user_id, post_id, name from comment left join post on post.id = post_id left join subreddit on subreddit_id = subreddit.id where comment.id = ${req.params.id};`
+        )
+        .then((resp) =>{
+            let rows = resp.rows[0];
+            if(resp.rows.length > 0){
+                res.send(rows);
+            }
+        }).catch((err) => {
+            console.log(err);
+            res.sendStatus(500);
+        });
+});
+
 router.post(`/add`, async (req, res) => {
     await pg
         .query(

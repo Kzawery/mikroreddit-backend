@@ -3,7 +3,6 @@ var pg = require("./client");
 var express = require("express");
 var router = express.Router();
 var jwt = require("jsonwebtoken");
-var uuid = require("uuid");
 
 router.post("/login", (req, res) => {
     passport.authenticate("local", { session: false }, (err, user, info) => {
@@ -48,7 +47,7 @@ router.post("/register", async (req, res) => {
             res.status(500).send("There was a problem registering the user.");
         });
 
-    await pg.query(`insert into reddit_user (nickname,password, email, activation_guid, activation_expire_date) values('${req.body.username}', '${req.body.password}' , '${req.body.email}', '${uuid.v4()}', CURRENT_TIMESTAMP + '1 day')`)
+    await pg.query(`insert into reddit_user (nickname,password, email) values('${req.body.username}', '${req.body.password}' , '${req.body.email}')`)
         .then(() => {
         res.sendStatus(200);
     }).catch((err) => {

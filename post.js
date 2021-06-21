@@ -10,9 +10,9 @@ router.get("/", async (req, res) => {
         orderby = 'order by votes DESC'
     }
 
-    let query = `select post.id as id, post.title as title, (select vote from post_vote where post_id = post.id and user_id = ${req.user.id}) as upvoted, post.content as content, nickname as nickname, post.video_url as videourl, post.image_path as imagepath, name as subname, cast(COALESCE(vote_count.votes, 0) as int) as votes from post left join reddit_user on user_id = reddit_user.id left join subreddit on subreddit_id = subreddit.id left join (select sum(vote) votes, post_id from post_vote group by post_id) as vote_count on vote_count.post_id = post.id  ${orderby} OFFSET ${index} ROWS FETCH NEXT 10 ROWS ONLY; `
+    let query = `select user_id as user_id, post.id as id, post.title as title, (select vote from post_vote where post_id = post.id and user_id = ${req.user.id}) as upvoted, post.content as content, nickname as nickname, post.video_url as videourl, post.image_path as imagepath, name as subname, cast(COALESCE(vote_count.votes, 0) as int) as votes from post left join reddit_user on user_id = reddit_user.id left join subreddit on subreddit_id = subreddit.id left join (select sum(vote) votes, post_id from post_vote group by post_id) as vote_count on vote_count.post_id = post.id  ${orderby} OFFSET ${index} ROWS FETCH NEXT 10 ROWS ONLY; `
     if (req.query.subname !== undefined) {
-        query = `select post.id as id, post.title as title, (select vote from post_vote where post_id = post.id and user_id = ${req.user.id}) as upvoted, post.content as content, nickname as nickname, post.video_url as videourl, post.image_path as imagepath, name as subname, cast(COALESCE(vote_count.votes, 0) as int) as votes from post left join reddit_user on user_id = reddit_user.id left join subreddit on subreddit_id = subreddit.id left join (select sum(vote) votes, post_id from post_vote group by post_id) as vote_count on vote_count.post_id = post.id where subreddit.name='${req.query.subname}' ${orderby} OFFSET ${index} ROWS FETCH NEXT 10 ROWS ONLY ; `
+        query = `select user_id as user_id, post.id as id, post.title as title, (select vote from post_vote where post_id = post.id and user_id = ${req.user.id}) as upvoted, post.content as content, nickname as nickname, post.video_url as videourl, post.image_path as imagepath, name as subname, cast(COALESCE(vote_count.votes, 0) as int) as votes from post left join reddit_user on user_id = reddit_user.id left join subreddit on subreddit_id = subreddit.id left join (select sum(vote) votes, post_id from post_vote group by post_id) as vote_count on vote_count.post_id = post.id where subreddit.name='${req.query.subname}' ${orderby} OFFSET ${index} ROWS FETCH NEXT 10 ROWS ONLY ; `
     }
 
     await pg
@@ -51,7 +51,7 @@ router.post("/", storage.single('file'), async (req, res) => {
         });
 
     if (req.file) {
-        const fileUrl = `http://localhost:3000/Uploads/${req.file.filename}`;
+        const fileUrl = `/uploads/${req.file.filename}`;
         await pg.query(
             `update post set image_path = '${fileUrl}' where id = ${id}`
         );
@@ -72,7 +72,7 @@ router.get("/:id", async (req, res) => {
     let postId = parseInt(req.params.id);
     await pg
         .query(
-            `select post.id as id, post.title as title, (select vote from post_vote where post_id = ${postId} and user_id = ${req.user.id}) as upvoted, post.content as content, nickname as nickname, post.video_url as videourl, post.image_path as imagepath, name as subname, cast(COALESCE(vote_count.votes, 0) as int) as votes from post left join reddit_user on user_id = reddit_user.id left join subreddit on subreddit_id = subreddit.id left join (select sum(vote) votes, post_id from post_vote group by post_id) as vote_count on vote_count.post_id = post.id where post_id = ${postId};`
+            `select user_id as user_id, post.id as id, post.title as title, (select vote from post_vote where post_id = ${postId} and user_id = ${req.user.id}) as upvoted, post.content as content, nickname as nickname, post.video_url as videourl, post.image_path as imagepath, name as subname, cast(COALESCE(vote_count.votes, 0) as int) as votes from post left join reddit_user on user_id = reddit_user.id left join subreddit on subreddit_id = subreddit.id left join (select sum(vote) votes, post_id from post_vote group by post_id) as vote_count on vote_count.post_id = post.id where post_id = ${postId};`
         )
         .then((resp) =>{
             if (resp.rows.length === 0){
@@ -191,7 +191,7 @@ router.post("/delete", async (req, res) => {
         })
         .catch((err) => {
             console.log(err);
-            res.sendStatus(500);
+            res.sendStatus(503);
         });
 
     await pg
@@ -201,7 +201,7 @@ router.post("/delete", async (req, res) => {
         })
         .catch((err) => {
             console.log(err);
-            res.sendStatus(500);
+            res.sendStatus(503);
         });
 
     await pg
