@@ -30,32 +30,34 @@ router.post("/register", async (req, res) => {
             if (response.rows.length > 0) {
                 res.status(403).send("User with that email already exists");
             }
-        }).catch((err) => {
-            console.log(err);
-            res.status(500).send("There was a problem registering the user.");
-        });
-    await pg
-        .query(
-            `select * from reddit_user where nickname= '${req.body.username}'`
-        )
-        .then((response) => {
-            if (response.rows.length > 0) {
-                res.status(403).send("User with that username already exists");
+            else {
+                pg
+                    .query(
+                        `select * from reddit_user where nickname= '${req.body.username}'`
+                    )
+                    .then((response) => {
+                        if (response.rows.length > 0) {
+                            res.status(403).send("User with that username already exists");
+                        } else {
+                            pg.query(
+                                `insert into reddit_user (nickname,password, email) values('${req.body.username}', '${req.body.password}' , '${req.body.email}')`
+                            )
+                                .then(() => {
+                                    res.sendStatus(200);
+                                }).catch((err) => {
+                                    console.log(err);
+                                    res.sendStatus(500);
+                                });
+                        }
+                    }).catch((err) => {
+                        console.log(err);
+                        res.status(500).send("There was a problem registering the user.");
+                    });
             }
         }).catch((err) => {
             console.log(err);
             res.status(500).send("There was a problem registering the user.");
         });
-
-    await pg.query(
-        `insert into reddit_user (nickname,password, email) values('${req.body.username}', '${req.body.password}' , '${req.body.email}')`
-        )
-        .then(() => {
-            res.sendStatus(200);
-        }).catch((err) => {
-            console.log(err);
-            res.sendStatus(500);
-    });
 });
 
 
