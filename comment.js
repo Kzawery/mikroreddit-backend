@@ -42,7 +42,7 @@ router.post(`/add`, async (req, res) => {
         ).then((resp) => {
             const io = req.app.get("socketio");
             resp.rows[0].user = req.user.nickname;
-            io.emit(`comment/add`, resp.rows[0]);
+            io.emit(`comment/add/${req.body.postId}`, resp.rows[0]);
             res.sendStatus(200);
         }).catch((err) => {
             console.log(err);
@@ -52,12 +52,12 @@ router.post(`/add`, async (req, res) => {
 router.delete("/:id", async (req, res) => {
     await pg
         .query(
-            `delete from comment where id = ${req.params.id} returning id;`
+            `delete from comment where id = ${req.params.id} returning post_id;`
         )
         .then((resp) => {
-            res.send(resp.rows);
+            const id = resp.rows[0].post_id;
             const io = req.app.get("socketio");
-            io.emit(`comment/del`, `${req.params.id}`);
+            io.emit(`comment/del/${id}`, `${req.params.id}`);
             res.sendStatus(200);
         })
         .catch((err) => {

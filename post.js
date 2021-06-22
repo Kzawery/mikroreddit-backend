@@ -225,6 +225,8 @@ router.post("/delete", async (req, res) => {
             `delete from post where id = ${req.body.id};`
         ).then((resp) => {
             console.log(resp);
+            const io = req.app.get("socketio");
+            io.emit(`post/del`, `${req.body.id}`);
             res.sendStatus(200);
         }).catch((err) => {
             console.log(err);
